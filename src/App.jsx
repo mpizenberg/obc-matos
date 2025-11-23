@@ -152,8 +152,21 @@ function App() {
     setMessage({ type: "", text: "" });
 
     try {
-      // Script URL from URL param, env var, or hardcoded fallback
+      // Script URL from URL param or env var
       const scriptUrl = urlParams.scriptUrl || import.meta.env.VITE_SCRIPT_URL;
+
+      // Validate scriptUrl is configured and absolute
+      if (!scriptUrl) {
+        throw new Error(
+          "URL du script non configurée. Utilisez le paramètre ?scriptUrl=... ou configurez VITE_SCRIPT_URL",
+        );
+      }
+
+      if (!scriptUrl.startsWith("http://") && !scriptUrl.startsWith("https://")) {
+        throw new Error(
+          "URL du script invalide. Doit commencer par http:// ou https://",
+        );
+      }
 
       const data = {
         memberName: memberName(),
@@ -186,7 +199,10 @@ function App() {
         setMessage({ type: "", text: "" });
       }, 2000);
     } catch (error) {
-      setMessage({ type: "error", text: "Erreur lors de l'enregistrement" });
+      setMessage({
+        type: "error",
+        text: error.message || "Erreur lors de l'enregistrement",
+      });
     } finally {
       setSubmitting(false);
     }
