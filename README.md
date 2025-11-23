@@ -128,8 +128,34 @@ IDs d'équipement disponibles:
 
 ## Déploiement
 
-Vous pouvez déployer les fichiers du dossier `dist/` sur n'importe quel hébergement statique:
-- GitHub Pages
+### GitHub Pages (automatique)
+
+Le projet inclut un workflow GitHub Actions qui déploie automatiquement sur GitHub Pages à chaque push sur `main`.
+
+**Configuration requise:**
+
+1. **Activer GitHub Pages:**
+   - Aller dans **Settings** > **Pages**
+   - Sous **Source**, sélectionner **GitHub Actions**
+
+2. **Configurer les secrets:**
+   - Aller dans **Settings** > **Secrets and variables** > **Actions**
+   - Ajouter un secret `VITE_SCRIPT_URL` avec l'URL de votre Google Apps Script
+
+3. **Configurer le base path (si nécessaire):**
+   - Pour un repo projet (ex: `username.github.io/repo-name`), ajouter un secret `VITE_BASE_PATH` avec la valeur `/repo-name/`
+   - Pour un domaine custom ou user page (ex: `username.github.io`), laisser vide ou mettre `/`
+
+4. **Push sur main:**
+   ```bash
+   git push origin main
+   ```
+
+Le site sera disponible à `https://username.github.io/repo-name/`
+
+### Autres plateformes
+
+Vous pouvez aussi déployer les fichiers du dossier `dist/` sur:
 - Netlify
 - Vercel
 - Firebase Hosting
