@@ -6,12 +6,7 @@ const EQUIPMENT_TYPES = [
   { id: "autres", label: "Autres...", image: "➕", maxQty: 0, price: 0 },
 ];
 
-const OTHER_EQUIPMENT = [
-  { id: "babolat2", label: "Babolat 2", maxQty: 2, price: 18 },
-  { id: "babolat4", label: "Babolat 4", maxQty: 2, price: 12 },
-  { id: "grip", label: "Grip", maxQty: 3, price: 3 },
-  { id: "surgrip", label: "Surgrip", maxQty: 3, price: 2 },
-];
+const OTHER_EQUIPMENT = [{ id: "grip", label: "Grip", maxQty: 3, price: 2 }];
 
 const LOCATIONS = ["Léo Lagrange", "Argoulets"];
 
@@ -162,7 +157,10 @@ function App() {
         );
       }
 
-      if (!scriptUrl.startsWith("http://") && !scriptUrl.startsWith("https://")) {
+      if (
+        !scriptUrl.startsWith("http://") &&
+        !scriptUrl.startsWith("https://")
+      ) {
         throw new Error(
           "URL du script invalide. Doit commencer par http:// ou https://",
         );
