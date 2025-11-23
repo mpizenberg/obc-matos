@@ -216,12 +216,6 @@ function App() {
     <main>
       <h1>Achat Équipement</h1>
 
-      <Show when={message().text}>
-        <div class={message().type === "error" ? "error" : "success"}>
-          {message().text}
-        </div>
-      </Show>
-
       <form onSubmit={handleSubmit}>
         <section class="form-section">
           <h2>Nom de l'adhérent</h2>
@@ -361,6 +355,12 @@ function App() {
               </div>
             </Show>
           </section>
+        </Show>
+
+        <Show when={message().text}>
+          <div class={message().type === "error" ? "error" : "success"}>
+            {message().text}
+          </div>
         </Show>
 
         <button
