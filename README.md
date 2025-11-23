@@ -121,10 +121,7 @@ https://votre-domaine.com/?lieu=Léo%20Lagrange&equipment=vinastar
 IDs d'équipement disponibles:
 - `vinastar`
 - `as10`
-- `babolat2`
-- `babolat4`
 - `grip`
-- `surgrip`
 
 ## Déploiement
 
