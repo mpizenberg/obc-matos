@@ -1,0 +1,157 @@
+# OBC Matos - Achat Équipement
+
+Une application web minimaliste pour faciliter l'enregistrement des achats d'équipement de badminton.
+
+## Fonctionnalités
+
+- ✅ Sélection rapide d'équipement avec images et prix
+- ✅ Compteur de quantité intuitif avec calcul du total
+- ✅ Pré-remplissage automatique via paramètres URL (pour QR codes)
+- ✅ Détection automatique du créneau horaire
+- ✅ Interface mobile-friendly
+- ✅ Intégration avec Google Sheets via Apps Script
+- ✅ Configuration flexible du script URL (env var ou URL param)
+
+## Installation
+
+```bash
+npm install
+```
+
+## Développement
+
+```bash
+npm run dev -- --host
+```
+
+Ouvrir http://localhost:5173
+
+## Build pour production
+
+```bash
+npm run build
+```
+
+Les fichiers statiques seront générés dans le dossier `dist/`.
+
+## Configuration Google Apps Script
+
+### 1. Créer le script
+
+1. Ouvrir votre Google Sheet
+2. Aller dans **Extensions** > **Apps Script**
+3. Copier le contenu de `google-apps-script.js` dans l'éditeur
+4. Remplacer `YOUR_SPREADSHEET_ID` par l'ID de votre spreadsheet (visible dans l'URL)
+
+### 2. Ajuster les colonnes
+
+Le script suppose que votre sheet a les colonnes suivantes dans cet ordre:
+1. Timestamp
+2. Nom de l'adhérent acheteur
+3. Type de volant
+4. Quantité
+5. Grip
+6. Surgrip
+7. Lieu
+8. Créneau
+9. Moyen de paiement
+
+**Important:** Si vos colonnes sont dans un ordre différent (notamment si vous utilisez le Google Form par défaut), vous devrez ajuster l'ordre dans le tableau `newRow` du script.
+
+### 3. Déployer comme Web App
+
+1. Dans l'éditeur Apps Script, cliquer sur **Déployer** > **Nouveau déploiement**
+2. Cliquer sur l'icône d'engrenage et choisir **Application Web**
+3. Configurer:
+   - **Execute as:** Me (votre compte)
+   - **Who has access:** Anyone (ou "Anyone with Google account" selon vos préférences)
+4. Cliquer sur **Déployer**
+5. Copier l'URL de déploiement fournie
+
+### 4. Configurer l'URL du script
+
+Il y a trois façons de configurer l'URL du Google Apps Script (par ordre de priorité):
+
+**Option A: Paramètre URL (recommandé pour tester)**
+```
+https://votre-domaine.com/?scriptUrl=https://script.google.com/macros/s/...
+```
+
+**Option B: Variable d'environnement (recommandé pour production)**
+
+Créer un fichier `.env` à la racine du projet:
+```bash
+VITE_SCRIPT_URL=https://script.google.com/macros/s/AKfycby.../exec
+```
+
+Pour GitHub Pages, vous pouvez créer un workflow qui build avec cette variable.
+
+**Option C: Hardcodé dans le code**
+
+Dans `src/App.jsx:158`, remplacer l'URL par défaut.
+
+### 5. Tester
+
+Vous pouvez tester le script directement dans Apps Script en utilisant la fonction `testDoPost()`.
+
+## Utilisation avec QR Codes
+
+### Paramètres URL disponibles
+
+L'application supporte les paramètres URL suivants:
+- `lieu` - Pré-remplit le lieu (ex: `Léo%20Lagrange`, `Argoulets`)
+- `equipment` - Pré-sélectionne l'équipement (voir IDs ci-dessous)
+- `scriptUrl` - Override de l'URL du Google Apps Script
+
+### Pré-remplir le lieu
+
+Créer des QR codes avec des URLs comme:
+```
+https://votre-domaine.com/?lieu=Léo%20Lagrange
+https://votre-domaine.com/?lieu=Argoulets
+```
+
+### Pré-remplir le lieu ET l'équipement
+
+Pour créer des QR codes spécialisés (ex: achat rapide de Vinastar):
+```
+https://votre-domaine.com/?lieu=Léo%20Lagrange&equipment=vinastar
+```
+
+IDs d'équipement disponibles:
+- `vinastar`
+- `as10`
+- `babolat2`
+- `babolat4`
+- `grip`
+- `surgrip`
+
+## Déploiement
+
+Vous pouvez déployer les fichiers du dossier `dist/` sur n'importe quel hébergement statique:
+- GitHub Pages
+- Netlify
+- Vercel
+- Firebase Hosting
+- etc.
+
+## Technologies utilisées
+
+- **Solid.js** - Framework réactif minimaliste
+- **Vite** - Build tool rapide
+- **CSS vanilla** - Pas de framework CSS lourd
+- **Google Apps Script** - Backend serverless
+
+## Structure du projet
+
+```
+.
+├── src/
+│   ├── App.jsx          # Composant principal
+│   ├── index.jsx        # Point d'entrée
+│   └── styles.css       # Styles CSS
+├── index.html           # HTML de base
+├── vite.config.js       # Configuration Vite
+├── google-apps-script.js # Script Google Apps
+└── package.json         # Dépendances
+```
