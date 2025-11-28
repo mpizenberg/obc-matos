@@ -11,6 +11,7 @@ Une application web minimaliste pour faciliter l'enregistrement des achats d'éq
 - ✅ Interface mobile-friendly
 - ✅ Intégration avec Google Sheets via Apps Script
 - ✅ Configuration flexible du script URL (env var ou URL param)
+- ✅ Bannière de secours avec lien vers le formulaire Google original
 
 ## Installation
 
@@ -82,7 +83,10 @@ https://votre-domaine.com/?scriptUrl=https://script.google.com/macros/s/...
 Créer un fichier `.env` à la racine du projet:
 ```bash
 VITE_SCRIPT_URL=https://script.google.com/macros/s/AKfycby.../exec
+VITE_GOOGLE_FORM_URL=https://forms.gle/VotreFormID
 ```
+
+Le `VITE_GOOGLE_FORM_URL` est optionnel et affiche une bannière en haut de l'application avec un lien vers le formulaire Google original en cas de problème avec l'application.
 
 Pour GitHub Pages, vous pouvez créer un workflow qui build avec cette variable.
 
