@@ -4,14 +4,13 @@ Une application web minimaliste pour faciliter l'enregistrement des achats d'éq
 
 ## Fonctionnalités
 
-- ✅ Sélection rapide d'équipement avec images et prix
-- ✅ Compteur de quantité intuitif avec calcul du total
-- ✅ Pré-remplissage automatique via paramètres URL (pour QR codes)
-- ✅ Détection automatique du créneau horaire
-- ✅ Interface mobile-friendly
-- ✅ Intégration avec Google Sheets via Apps Script
-- ✅ Configuration flexible du script URL (env var ou URL param)
-- ✅ Bannière de secours avec lien vers le formulaire Google original
+- Sélection rapide d'équipement avec images et prix
+- Compteur de quantité intuitif avec calcul du total
+- Pré-remplissage automatique via paramètres URL (pour QR codes)
+- Détection automatique du créneau horaire
+- Interface mobile-friendly
+- Intégration avec Google Sheets via Apps Script
+- Configuration flexible du script URL (env var ou URL param)
 
 ## Installation
 
