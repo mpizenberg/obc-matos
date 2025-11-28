@@ -221,7 +221,7 @@ function App() {
             type="text"
             value={memberName()}
             onInput={(e) => setMemberName(e.target.value)}
-            placeholder="Entrez votre nom"
+            placeholder="nom de l’adhérent"
           />
         </section>
 
