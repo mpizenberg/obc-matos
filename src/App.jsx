@@ -14,7 +14,7 @@ const TIME_SLOTS = [
   { id: "mardi", label: "Mardi", day: 2 },
   { id: "mercredi", label: "Mercredi", day: 3 },
   { id: "vendredi_midi", label: "Vendredi midi", day: 5, timeRange: [11, 14] },
-  { id: "vendredi_soir", label: "Vendredi soir", day: 5, timeRange: [18, 23] },
+  { id: "vendredi_soir", label: "Vendredi soir", day: 5, timeRange: [17, 23] },
   { id: "samedi", label: "Samedi", day: 6 },
   { id: "dimanche", label: "Dimanche", day: 0 },
 ];
@@ -210,166 +210,181 @@ function App() {
     return memberName() && selectedEquipment() && paymentMethod();
   };
 
+  const googleFormUrl = import.meta.env.VITE_GOOGLE_FORM_URL;
+
   return (
-    <main>
-      <h1>Achat Équipement</h1>
+    <>
+      <Show when={googleFormUrl}>
+        <div class="fallback-banner">
+          <a href={googleFormUrl} target="_blank" rel="noopener noreferrer">
+            En cas de problème avec cette application, utilisez le formulaire
+            Google original
+          </a>
+        </div>
+      </Show>
 
-      <form onSubmit={handleSubmit}>
-        <section class="form-section">
-          <h2>Nom de l'adhérent</h2>
-          <input
-            type="text"
-            value={memberName()}
-            onInput={(e) => setMemberName(e.target.value)}
-            placeholder="nom de l’adhérent"
-          />
-        </section>
+      <main>
+        <h1>Achat Équipement</h1>
 
-        <section class="form-section">
-          <h2>Équipement</h2>
-          <Show when={!showOthers()}>
-            <div class="equipment-grid">
-              {EQUIPMENT_TYPES.map((equipment) => (
-                <button
-                  type="button"
-                  class={`equipment-card ${selectedEquipment() === equipment.id ? "selected" : ""}`}
-                  onClick={() => handleEquipmentSelect(equipment.id)}
-                >
-                  <div style="font-size: 2rem;">{equipment.image}</div>
-                  <div>{equipment.label}</div>
-                  <Show when={equipment.price > 0}>
+        <form onSubmit={handleSubmit}>
+          <section class="form-section">
+            <h2>Nom de l'adhérent</h2>
+            <input
+              type="text"
+              value={memberName()}
+              onInput={(e) => setMemberName(e.target.value)}
+              placeholder="nom de l’adhérent"
+            />
+          </section>
+
+          <section class="form-section">
+            <h2>Équipement</h2>
+            <Show when={!showOthers()}>
+              <div class="equipment-grid">
+                {EQUIPMENT_TYPES.map((equipment) => (
+                  <button
+                    type="button"
+                    class={`equipment-card ${selectedEquipment() === equipment.id ? "selected" : ""}`}
+                    onClick={() => handleEquipmentSelect(equipment.id)}
+                  >
+                    <div style="font-size: 2rem;">{equipment.image}</div>
+                    <div>{equipment.label}</div>
+                    <Show when={equipment.price > 0}>
+                      <div style="font-size: 0.85rem; color: #666; margin-top: 0.25rem;">
+                        {equipment.price}€
+                      </div>
+                    </Show>
+                  </button>
+                ))}
+              </div>
+            </Show>
+
+            <Show when={showOthers()}>
+              <div class="choice-buttons">
+                {OTHER_EQUIPMENT.map((equipment) => (
+                  <button
+                    type="button"
+                    class={`choice-button ${selectedEquipment() === equipment.id ? "selected" : ""}`}
+                    onClick={() => handleOtherEquipmentSelect(equipment.id)}
+                  >
+                    <div>{equipment.label}</div>
                     <div style="font-size: 0.85rem; color: #666; margin-top: 0.25rem;">
                       {equipment.price}€
                     </div>
-                  </Show>
-                </button>
-              ))}
-            </div>
-          </Show>
+                  </button>
+                ))}
+              </div>
+              <button
+                type="button"
+                style="margin-top: 0.75rem; padding: 0.5rem; width: 100%; border: 2px solid #ddd; background: white; border-radius: 6px; cursor: pointer;"
+                onClick={() => {
+                  setShowOthers(false);
+                  setSelectedEquipment("");
+                }}
+              >
+                ← Retour
+              </button>
+            </Show>
 
-          <Show when={showOthers()}>
-            <div class="choice-buttons">
-              {OTHER_EQUIPMENT.map((equipment) => (
+            <Show
+              when={selectedEquipment() && selectedEquipment() !== "autres"}
+            >
+              <div class="counter">
                 <button
                   type="button"
-                  class={`choice-button ${selectedEquipment() === equipment.id ? "selected" : ""}`}
-                  onClick={() => handleOtherEquipmentSelect(equipment.id)}
+                  onClick={decrementQuantity}
+                  disabled={quantity() <= 1}
                 >
-                  <div>{equipment.label}</div>
-                  <div style="font-size: 0.85rem; color: #666; margin-top: 0.25rem;">
-                    {equipment.price}€
-                  </div>
+                  −
                 </button>
-              ))}
-            </div>
-            <button
-              type="button"
-              style="margin-top: 0.75rem; padding: 0.5rem; width: 100%; border: 2px solid #ddd; background: white; border-radius: 6px; cursor: pointer;"
-              onClick={() => {
-                setShowOthers(false);
-                setSelectedEquipment("");
-              }}
-            >
-              ← Retour
-            </button>
-          </Show>
-
-          <Show when={selectedEquipment() && selectedEquipment() !== "autres"}>
-            <div class="counter">
-              <button
-                type="button"
-                onClick={decrementQuantity}
-                disabled={quantity() <= 1}
-              >
-                −
-              </button>
-              <span>{quantity()}</span>
-              <button
-                type="button"
-                onClick={incrementQuantity}
-                disabled={quantity() >= getMaxQuantity()}
-              >
-                +
-              </button>
-            </div>
-          </Show>
-        </section>
-
-        <section class="form-section">
-          <h2>Lieu</h2>
-          <div class="choice-buttons">
-            {LOCATIONS.map((loc) => (
-              <button
-                type="button"
-                class={`choice-button ${location() === loc ? "selected" : ""}`}
-                onClick={() => setLocation(loc)}
-              >
-                {loc}
-              </button>
-            ))}
-          </div>
-        </section>
-
-        <section class="form-section">
-          <h2>Créneau</h2>
-          <div class="time-slots">
-            {TIME_SLOTS.map((slot) => (
-              <button
-                type="button"
-                class={`time-slot ${timeSlot() === slot.id ? "selected" : ""}`}
-                onClick={() => setTimeSlot(slot.id)}
-              >
-                {slot.label}
-              </button>
-            ))}
-          </div>
-        </section>
-
-        <section class="form-section">
-          <h2>Moyen de paiement</h2>
-          <div class="payment-methods">
-            {PAYMENT_METHODS.map((method) => (
-              <button
-                type="button"
-                class={`payment-button ${paymentMethod() === method.id ? "selected" : ""}`}
-                onClick={() => setPaymentMethod(method.id)}
-              >
-                <div style="font-size: 2rem;">{method.icon}</div>
-                <div class="label">{method.label}</div>
-              </button>
-            ))}
-          </div>
-        </section>
-
-        <Show when={selectedEquipment() && selectedEquipment() !== "autres"}>
-          <section class="form-section total-price">
-            <h2>Total</h2>
-            <div style="font-size: 1.75rem; font-weight: bold; text-align: center; color: #27ae60;">
-              {getTotalPrice()}€
-            </div>
-            <Show when={quantity() > 1}>
-              <div style="font-size: 0.9rem; text-align: center; color: #666; margin-top: 0.25rem;">
-                {quantity()} × {getEquipmentPrice()}€
+                <span>{quantity()}</span>
+                <button
+                  type="button"
+                  onClick={incrementQuantity}
+                  disabled={quantity() >= getMaxQuantity()}
+                >
+                  +
+                </button>
               </div>
             </Show>
           </section>
-        </Show>
 
-        <Show when={message().text}>
-          <div class={message().type === "error" ? "error" : "success"}>
-            {message().text}
-          </div>
-        </Show>
+          <section class="form-section">
+            <h2>Lieu</h2>
+            <div class="choice-buttons">
+              {LOCATIONS.map((loc) => (
+                <button
+                  type="button"
+                  class={`choice-button ${location() === loc ? "selected" : ""}`}
+                  onClick={() => setLocation(loc)}
+                >
+                  {loc}
+                </button>
+              ))}
+            </div>
+          </section>
 
-        <button
-          type="submit"
-          class="submit-button"
-          disabled={!isFormValid() || submitting()}
-        >
-          {submitting() ? "Envoi..." : "Enregistrer l'achat"}
-        </button>
-      </form>
-    </main>
+          <section class="form-section">
+            <h2>Créneau</h2>
+            <div class="time-slots">
+              {TIME_SLOTS.map((slot) => (
+                <button
+                  type="button"
+                  class={`time-slot ${timeSlot() === slot.id ? "selected" : ""}`}
+                  onClick={() => setTimeSlot(slot.id)}
+                >
+                  {slot.label}
+                </button>
+              ))}
+            </div>
+          </section>
+
+          <section class="form-section">
+            <h2>Moyen de paiement</h2>
+            <div class="payment-methods">
+              {PAYMENT_METHODS.map((method) => (
+                <button
+                  type="button"
+                  class={`payment-button ${paymentMethod() === method.id ? "selected" : ""}`}
+                  onClick={() => setPaymentMethod(method.id)}
+                >
+                  <div style="font-size: 2rem;">{method.icon}</div>
+                  <div class="label">{method.label}</div>
+                </button>
+              ))}
+            </div>
+          </section>
+
+          <Show when={selectedEquipment() && selectedEquipment() !== "autres"}>
+            <section class="form-section total-price">
+              <h2>Total</h2>
+              <div style="font-size: 1.75rem; font-weight: bold; text-align: center; color: #27ae60;">
+                {getTotalPrice()}€
+              </div>
+              <Show when={quantity() > 1}>
+                <div style="font-size: 0.9rem; text-align: center; color: #666; margin-top: 0.25rem;">
+                  {quantity()} × {getEquipmentPrice()}€
+                </div>
+              </Show>
+            </section>
+          </Show>
+
+          <Show when={message().text}>
+            <div class={message().type === "error" ? "error" : "success"}>
+              {message().text}
+            </div>
+          </Show>
+
+          <button
+            type="submit"
+            class="submit-button"
+            disabled={!isFormValid() || submitting()}
+          >
+            {submitting() ? "Envoi..." : "Enregistrer l'achat"}
+          </button>
+        </form>
+      </main>
+    </>
   );
 }
 
