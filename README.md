@@ -9,10 +9,31 @@ Une application web minimaliste pour faciliter l'enregistrement des achats d'éq
 - Pré-remplissage automatique via paramètres URL (pour QR codes)
 - Détection automatique du créneau horaire
 - Interface mobile-friendly
+- **PWA installable** - Fonctionne comme une app native sur mobile et desktop
 - Intégration avec Google Sheets via Apps Script
 - Configuration flexible du script URL (env var ou URL param)
 
-## Installation
+## Installation de l'app (PWA)
+
+L'application peut être installée sur votre appareil pour un accès rapide:
+
+**Sur mobile (iOS/Android):**
+1. Ouvrir l'application dans votre navigateur
+2. Chercher l'option "Ajouter à l'écran d'accueil" ou "Installer l'application"
+   - **iOS Safari**: Appuyer sur le bouton de partage, puis "Sur l'écran d'accueil"
+   - **Android Chrome**: Appuyer sur le menu (⋮), puis "Installer l'application"
+
+**Sur desktop (Chrome, Edge):**
+1. Cliquer sur l'icône d'installation dans la barre d'adresse
+2. Ou aller dans le menu > "Installer OBC Matos"
+
+Une fois installée, l'app apparaîtra comme une application native avec:
+- Icône sur l'écran d'accueil / bureau
+- Lancement en plein écran sans barre d'adresse
+- Accès rapide depuis le lanceur d'applications
+- Fonctionnement hors ligne de l'interface (soumission nécessite une connexion)
+
+## Installation pour développeurs
 
 ```bash
 npm install
