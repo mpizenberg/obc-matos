@@ -215,7 +215,9 @@ function App() {
 
         // Add user-friendly message for header mismatch errors
         if (errorMessage.includes("Header mismatch")) {
-          errorMessage = "Oups, le formulaire a changé ! Il faut mettre à jour cette app pour ne pas y ajouter des données mal formatées dans le spreadsheet.\n\nDétails techniques : " + errorMessage;
+          errorMessage =
+            "Oups, le formulaire a changé ! Il faut mettre à jour cette app pour ne pas y ajouter des données mal formatées dans le spreadsheet.\n\nDétails techniques : " +
+            errorMessage;
         }
 
         throw new Error(errorMessage);
