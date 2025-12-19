@@ -12,7 +12,7 @@ export default defineConfig({
         name: 'OBC Matos - Achat Équipement',
         short_name: 'OBC Matos',
         description: 'Application pour l\'enregistrement des achats d\'équipement de badminton',
-        theme_color: '#4CAF50',
+        theme_color: '#B39DDB',
         background_color: '#ffffff',
         display: 'standalone',
         icons: [
