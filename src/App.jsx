@@ -13,8 +13,8 @@ const LOCATIONS = ["Léo Lagrange", "Argoulets"];
 const TIME_SLOTS = [
   { id: "mardi", label: "Mardi", day: 2 },
   { id: "mercredi", label: "Mercredi", day: 3 },
-  { id: "vendredi_midi", label: "Vendredi midi", day: 5, timeRange: [11, 14] },
-  { id: "vendredi_soir", label: "Vendredi soir", day: 5, timeRange: [17, 23] },
+  { id: "vendredi_midi", label: "Vendredi midi", day: 5, timeRange: [11, 15] },
+  { id: "vendredi_soir", label: "Vendredi soir", day: 5, timeRange: [16, 23] },
   { id: "samedi", label: "Samedi", day: 6 },
   { id: "dimanche", label: "Dimanche", day: 0 },
 ];
