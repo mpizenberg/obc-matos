@@ -12,22 +12,56 @@ function doPost(e) {
     const sheet = spreadsheet.getSheets()[0];
 
     // Parse the incoming data
-    const data = JSON.parse(e.postData.contents);
+    const payload = JSON.parse(e.postData.contents);
+    const data = payload.data;
+    const expectedHeaders = payload.headers;
 
-    // Create a new row with the data
-    // Adjust the order to match your form columns
-    const newRow = [
-      new Date(), // Timestamp
-      data.memberName, // Nom de l'adhérent acheteur
-      data.equipmentType, // Type de volant/équipement
-      data.quantity, // Quantité
-      // For Grip and Surgrip, you may need to adjust the logic
-      data.equipmentType === 'Grip' ? data.quantity : 0, // Grip
-      data.equipmentType === 'Surgrip' ? data.quantity : 0, // Surgrip
-      data.location, // Lieu
-      data.timeSlot, // Créneau
-      data.paymentMethod // Moyen de paiement
-    ];
+    // Get actual headers from the spreadsheet (row 1)
+    const actualHeaders = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+
+    // Normalize headers for comparison (trim whitespace, case-insensitive)
+    const normalizeHeader = (h) => String(h).trim().toLowerCase();
+    const normalizedActual = actualHeaders.map(normalizeHeader);
+    const normalizedExpected = expectedHeaders.map(normalizeHeader);
+
+    // Validate headers match
+    if (normalizedActual.length !== normalizedExpected.length) {
+      return ContentService.createTextOutput(JSON.stringify({
+        'status': 'error',
+        'message': 'Header mismatch: different number of columns',
+        'expected': expectedHeaders,
+        'actual': actualHeaders
+      })).setMimeType(ContentService.MimeType.JSON);
+    }
+
+    for (let i = 0; i < normalizedActual.length; i++) {
+      if (normalizedActual[i] !== normalizedExpected[i]) {
+        return ContentService.createTextOutput(JSON.stringify({
+          'status': 'error',
+          'message': `Header mismatch at column ${i + 1}: expected "${expectedHeaders[i]}", got "${actualHeaders[i]}"`,
+          'expected': expectedHeaders,
+          'actual': actualHeaders
+        })).setMimeType(ContentService.MimeType.JSON);
+      }
+    }
+
+    // Headers match! Build the row from the data object
+    // The data object keys should match the header names
+    const newRow = expectedHeaders.map(header => {
+      const normalizedHeader = normalizeHeader(header);
+
+      // Special case: timestamp
+      if (normalizedHeader === 'timestamp' || normalizedHeader === 'horodateur') {
+        return new Date();
+      }
+
+      // Find matching key in data (case-insensitive)
+      const dataKey = Object.keys(data).find(key =>
+        normalizeHeader(key) === normalizedHeader
+      );
+
+      return dataKey ? data[dataKey] : '';
+    });
 
     // Append the row to the sheet
     sheet.appendRow(newRow);
@@ -52,12 +86,27 @@ function testDoPost() {
   const testData = {
     postData: {
       contents: JSON.stringify({
-        memberName: 'Test User',
-        equipmentType: 'Vinastar',
-        quantity: 2,
-        location: 'Léo Lagrange',
-        timeSlot: 'Mercredi',
-        paymentMethod: 'Liquide'
+        headers: [
+          'Timestamp',
+          'Nom de l\'adhérent acheteur',
+          'Type de volant',
+          'Quantité',
+          'Grip',
+          'Surgrip',
+          'Lieu',
+          'Créneau',
+          'Moyen de paiement'
+        ],
+        data: {
+          'Nom de l\'adhérent acheteur': 'Test User',
+          'Type de volant': 'Vinastar',
+          'Quantité': 2,
+          'Grip': 0,
+          'Surgrip': 0,
+          'Lieu': 'Léo Lagrange',
+          'Créneau': 'Mercredi',
+          'Moyen de paiement': 'Liquide'
+        }
       })
     }
   };

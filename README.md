@@ -43,9 +43,9 @@ Les fichiers statiques seront générés dans le dossier `dist/`.
 3. Copier le contenu de `google-apps-script.js` dans l'éditeur
 4. Remplacer `YOUR_SPREADSHEET_ID` par l'ID de votre spreadsheet (visible dans l'URL)
 
-### 2. Ajuster les colonnes
+### 2. Vérifier les colonnes
 
-Le script suppose que votre sheet a les colonnes suivantes dans cet ordre:
+Le script s'attend par défaut aux colonnes suivantes dans cet ordre:
 1. Timestamp
 2. Nom de l'adhérent acheteur
 3. Type de volant
@@ -56,7 +56,9 @@ Le script suppose que votre sheet a les colonnes suivantes dans cet ordre:
 8. Créneau
 9. Moyen de paiement
 
-**Important:** Si vos colonnes sont dans un ordre différent (notamment si vous utilisez le Google Form par défaut), vous devrez ajuster l'ordre dans le tableau `newRow` du script.
+**Important:** Le script valide automatiquement que les en-têtes du spreadsheet correspondent aux en-têtes attendus par l'application web. Si vous modifiez le Google Form (ajout, suppression ou réorganisation de questions), vous devrez mettre à jour le tableau `headers` dans `src/App.jsx:170-180` pour qu'il corresponde au nouveau format de votre spreadsheet.
+
+**Avantage:** Vous pouvez modifier librement le Google Form. L'application web détectera automatiquement toute incompatibilité et renverra un message d'erreur clair avec les en-têtes attendus vs. actuels.
 
 ### 3. Déployer comme Web App
 
@@ -96,6 +98,18 @@ Dans `src/App.jsx:158`, remplacer l'URL par défaut.
 ### 5. Tester
 
 Vous pouvez tester le script directement dans Apps Script en utilisant la fonction `testDoPost()`.
+
+### 6. Validation automatique des en-têtes
+
+Lorsqu'un utilisateur soumet le formulaire via l'application web:
+1. L'application envoie les données **avec** la liste des en-têtes attendus
+2. Le Google Apps Script lit les en-têtes actuels du spreadsheet
+3. Si les en-têtes ne correspondent pas (ordre ou contenu différent), l'écriture est **refusée**
+4. L'erreur est affichée directement dans l'application web avec le détail de la colonne problématique
+
+Cela garantit que les données sont toujours écrites dans les bonnes colonnes, même si le Google Form est modifié.
+
+**Pour déboguer:** Vous pouvez aussi consulter les logs dans Apps Script > **Exécutions** pour voir l'historique complet des requêtes et erreurs.
 
 ## Utilisation avec QR Codes
 
