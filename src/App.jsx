@@ -200,12 +200,10 @@ function App() {
         data: data,
       };
 
+      // Remove Content-Type header to avoid CORS preflight request
+      // Google Apps Script will still parse the JSON body correctly
       const response = await fetch(scriptUrl, {
         method: "POST",
-        // mode: "no-cors", // Uncomment to test in dev on localhost
-        headers: {
-          "Content-Type": "application/json",
-        },
         body: JSON.stringify(payload),
       });
 
@@ -213,7 +211,14 @@ function App() {
       const result = await response.json();
 
       if (result.status === "error") {
-        throw new Error(result.message || "Erreur lors de l'enregistrement");
+        let errorMessage = result.message || "Erreur lors de l'enregistrement";
+
+        // Add user-friendly message for header mismatch errors
+        if (errorMessage.includes("Header mismatch")) {
+          errorMessage = "Oups, le formulaire a changé ! Il faut mettre à jour cette app pour ne pas y ajouter des données mal formatées dans le spreadsheet.\n\nDétails techniques : " + errorMessage;
+        }
+
+        throw new Error(errorMessage);
       }
 
       setMessage({ type: "success", text: "Achat enregistré avec succès !" });
