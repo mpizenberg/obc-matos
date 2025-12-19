@@ -168,15 +168,16 @@ function App() {
 
       // Define the expected spreadsheet headers
       const headers = [
-        "Timestamp",
+        "Horodateur",
         "Nom de l'adhérent acheteur",
         "Type de volant",
         "Quantité",
-        "Grip",
-        "Surgrip",
         "Lieu",
         "Créneau",
         "Moyen de paiement",
+        "Grip",
+        "Surgrip?",
+        "Colonne 7",
       ];
 
       // Build data object with keys matching headers
@@ -188,11 +189,11 @@ function App() {
         "Nom de l'adhérent acheteur": memberName(),
         "Type de volant": isGrip || isSurgrip ? "" : equipmentLabel,
         Quantité: isGrip || isSurgrip ? 0 : quantity(),
-        Grip: isGrip ? quantity() : 0,
-        Surgrip: isSurgrip ? quantity() : 0,
         Lieu: location(),
         Créneau: getTimeSlotLabel(),
         "Moyen de paiement": getPaymentLabel(),
+        Grip: isGrip ? quantity() : 0,
+        "Surgrip?": isSurgrip ? quantity() : 0,
       };
 
       const payload = {
