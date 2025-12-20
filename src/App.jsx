@@ -6,7 +6,10 @@ const EQUIPMENT_TYPES = [
   { id: "autres", label: "Autres...", image: "➕", maxQty: 0, price: 0 },
 ];
 
-const OTHER_EQUIPMENT = [{ id: "grip", label: "Grip", maxQty: 3, price: 2 }];
+const OTHER_EQUIPMENT = [
+  { id: "B2", label: "B2", maxQty: 2, price: 18 },
+  { id: "grip", label: "Grip", maxQty: 3, price: 2 },
+];
 
 const LOCATIONS = ["Léo Lagrange", "Argoulets"];
 
