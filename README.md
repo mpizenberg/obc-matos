@@ -168,6 +168,7 @@ Le site sera disponible à `https://username.github.io/repo-name/`
 Vous pouvez aussi déployer les fichiers du dossier `dist/` sur:
 - Cloudflare Pages
 - Netlify
+- Dokploy
 - etc.
 
 ## Technologies utilisées
